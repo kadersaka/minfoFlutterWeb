@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <style>
+        .card-container {
+            display: flex;
+            height: 45px;
+            max-width: 90%;
+            overflow-x: hidden;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="card-container">
+    <form>
+        <input type="text" id="imagename" value="" />
+        <input type="button" id="btn" value="GO" />
+    </form>
+</div>
+
+<script type="text/javascript">
+        window.parent.addEventListener('message', handleMessage, false);
+
+        function handleMessage(e) {
+            var data = JSON.parse(e.data);
+            console.log(data);
+        }
+
+</script>
+</body>
+
+</html>

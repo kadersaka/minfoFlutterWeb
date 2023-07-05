@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Minfo Connect</title>
+
+    <style>
+        #innerContainer {
+            /*width: 600px;*/
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .circle {
+            border-radius: 50%;
+            background-color: orange;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            opacity: 0;
+            /*animation: scaleIn 4s infinite cubic-bezier(.36, .11, .89, .32);*/
+            animation: scaleIn 4s infinite cubic-bezier(.32, .89, .11, .36);
+        }
+
+        .circleInitial {
+            border-radius: 50%;
+            background-color: orange;
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            /*opacity: 0;*/
+        }
+
+        .item {
+            z-index: 100;
+            padding: 5px;
+        }
+
+        .item img {
+            width: 100px;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(2.5, 2.5);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(.5, .5);
+                opacity: .5;
+            }
+        }
+    </style>
+
+    <style>
+        /* based on bootstrap button btn-warning */
+        .btn-connect {
+            color: #212529;
+            background-color: #f28411 !important;
+            border-color: #f28411;
+        }
+
+            .btn-connect:hover {
+                color: #212529;
+                background-color: #f58e07 !important;
+                border-color: #d39e00
+            }
+
+            .btn-connect.focus, .btn-connect:focus {
+                box-shadow: 0 0 0 .2rem rgba(222,170,12,.5) !important;
+            }
+
+            .btn-connect.disabled, .btn-connect:disabled {
+                color: #212529;
+                background-color: #f28411 !important;
+                border-color: #f28411
+            }
+
+            .btn-connect:not(:disabled):not(.disabled).active, .btn-connect:not(:disabled):not(.disabled):active, .show > .btn-connect.dropdown-toggle {
+                color: #212529;
+                background-color: #d39e00;
+                border-color: #c69500
+            }
+
+            .btn-connect:not(:disabled):not(.disabled).active:focus, .btn-connect:not(:disabled):not(.disabled):active:focus, .show > .btn-connect.dropdown-toggle:focus {
+                box-shadow: 0 0 0 .2rem rgba(222,170,12,.5);
+            }
+
+        .btn-connect-image:before {
+            content: "";
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            margin: 0;
+            vertical-align: text-top;
+            background-color: transparent;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .imageButton:before {
+            background-image: url(assets/assets/logoweb.png);
+            margin: 0;
+        }
+    </style>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="assets/assets/soundcodeDetector.js"></script>
+    <script>
+
+        var callback = function (data) {
+            //var field = document.getElementById("codeFieldId");
+            //field.value = data.code;
+            console.log("ID: "+ data.code +" idDuration: "+ data.scDuration+ " msec"+" timestamp: "+ data.timestamp+ " msec");
+           // processConnection(data.code);
+            processConnection(data);
+        }
+
+        /*
+        window.onload = function () {
+            var button = document.getElementById('audioButtonId');
+            button.onclick = function () {
+                var field = document.getElementById("codeFieldId");
+                field.value = "";
+                switch (button.dataset.state) {
+                    case "stopped":
+                        soundCodeEx.start(callback);
+                        button.dataset.state = "started";
+                        button.value = "Stop";
+                        startAnimation();
+                        break;
+                    case "started":
+                        soundCodeEx.stop();
+                        button.dataset.state = "stopped";
+                        button.value = "Listen";
+                        stopAnimation()
+                        break;
+                }
+            }
+        }
+        */
+        window.onload = function () {
+            var buttonSingleConnect = document.getElementById('singleConnect');
+            var buttonMultipleConnect = document.getElementById('multipleConnect');
+            var buttonStopConnect = document.getElementById('stopConnect');
+            var buttonQrCodeConnect = document.getElementById('qrCodeConnect');
+
+
+            buttonSingleConnect.onclick = function () {
+                $("#circle1").show();
+                soundCodeEx.start(callback);
+                $("#audioMessage").text('Connecting...');
+                $("#pageHeader").text('Quick connect');
+                startAnimation();
+            };
+            buttonMultipleConnect.onclick = function () {
+                $("#circle1").show();
+                soundCodeEx.start(callback);
+                $("#audioMessage").text('Connecting...');
+                $("#pageHeader").text('Multi connect');
+                startAnimation();
+            };
+            buttonStopConnect.onclick = function () {
+                $("#circle1").hide();
+                soundCodeEx.stop();
+                $("#audioMessage").text('');
+                $("#pageHeader").text('Connecting paused');
+                stopAnimation();
+            };
+
+            buttonQrCodeConnect.onclick = function () {
+                window.location.href = '/DesktopModules/CS.Campaign/ScanQrCode2.aspx';
+            };
+
+            //buttonSingleConnect.click();
+            buttonStopConnect.click();
+        };
+
+
+        function startAnimation() {
+            $("#circle1").addClass("circle");
+            $("#circle2").addClass("circle");
+            $("#circle3").addClass("circle");
+            $("#circle4").addClass("circle");
+        }
+
+
+        function stopAnimation() {
+            $("#circle1").removeClass("circle");
+            $("#circle2").removeClass("circle");
+            $("#circle3").removeClass("circle");
+            $("#circle4").removeClass("circle");
+        }
+    </script>
+    <script>
+        function processConnection(data) {
+            var field = document.getElementById("codeFieldId");
+            field.value = "'" + data.code + "'";
+
+    //      var campaignAudioId = "'" + code + "'";
+            var campaignAudioId = data.code;
+           // alert(campaignAudioId);
+            console.log("audio ID: "+ campaignAudioId);
+           // console.log("audio ID: "+ data.code +" idDuration: "+ data.scDuration+ " msec"+" timestamp: "+ data.timestamp+ " msec");
+
+           // console.log
+            var event = {
+              'eventName': 'MyCustomEvent',
+              'data': {'campaignAudioId': campaignAudioId, 'scDuration': data.scDuration, 'timestamp': data.timestamp }
+            };
+            window.parent.postMessage(JSON.stringify(event), '*');
+            soundCodeEx.stop();
+            console.log("---------------------------------soundCodeEx.stop()");
+
+//            $.ajax({
+//                url: 'https://api.dev.minfo.com/api/minfo/campaignfromaudio?audio_id='+campaignAudioId,
+//                data: { CampaignAudioId: campaignAudioId },
+//                type: 'GET',
+//                dataType: 'JSON',
+//                beforeSend: function () {
+
+//                },
+//                success: function (data) {
+//                    //alert(data.CampaignNo);
+//                    soundCodeEx.stop();
+                    //window.location.href = '/DesktopModules/CS.Campaign/ViewCampaign3.aspx?ID=' + data.CampaignNo;
+//
+//                },
+//                error: function () { }
+//            });
+
+        }
+    </script>
+
+    <script>
+  // Capture events and send data to Flutter
+  function sendDataToFlutter(data) {
+    var event = new CustomEvent('dataEvent', { detail: data });
+    document.dispatchEvent(event);
+  }
+
+  // Example event listener
+  document.addEventListener('myEvent', function(event) {
+    var eventData = event.detail;
+    sendDataToFlutter(eventData);
+  });
+</script>
+
+<script>
+    var event = {
+        'eventName': 'MyCustomEvent',
+        'data': {'title': 'Hello', 'content': 'World!'}
+    };
+    window.parent.postMessage(JSON.stringify(event), '*');
+</script>
+
+</head>
+<body class="" style="margin-left:auto; margin-right:auto; width: 90%; background-color: #303030">
+    <center >
+        <form method="post" action="./Connect2.aspx" id="uxForm">
+            <div class="aspNetHidden">
+                <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="MrR7ehbacZ98Z+910p1ttNTXD5+U7uFMvp/39Lk4AWBPb8GV9elCqyDBssxAwH5Myaf/hIVA3ckcmByM4bvqnLnAtr91RBUbTWRNVg==" />
+            </div>
+
+            <div class="aspNetHidden">
+
+                <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="D0DAA078" />
+                <input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+            </div>
+            <div class="text-light">
+                <div class="text-center align-middle" style="margin-top: 20px;">
+                    <!--Code:-->
+                    <h3><span id="pageHeader"></span></h3>
+                    <input type="hidden" id="codeFieldId" value="">
+                </div>
+                <div id="outerContainer">
+                    <div id="innerContainer">
+                        <div class="item">
+                            <span id="audioMessage"></span>
+                        </div>
+                        <div id="circle1" class="circleInitial" style="animation-delay: 0s; display:none"></div>
+                        <div id="circle2" style="animation-delay: 1s"></div>
+                        <div id="circle3" style="animation-delay: 2s"></div>
+                        <div id="circle4" style="animation-delay: 3s"></div>
+                    </div>
+                </div>
+                <div class="text-center align-middle" style="margin-top: 20px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-connect btn-lg text-light" id="singleConnect" style="width:62px">|</button>
+                        <button type="button" class="btn btn-connect btn-lg text-light" id="stopConnect" style="width:62px">O</button>
+                        <button type="button" class="btn btn-connect btn-lg text-light" id="multipleConnect" style="width:62px">|||</button>
+                        <button type="button" class="btn btn-connect btn-lg text-light btn-connect-image imageButton" id="qrCodeConnect"></button>
+                    </div>
+                </div>
+
+                <div class="text-center align-middle" style="margin-top: 27px; ">
+                    <img src="assets/assets/logoweb.png" height="60" />
+                </div>
+
+                <!--    <div class="text-center align-middle" style="margin-top: 20px; width: 285px; text-align: center; background-color: #F28411;">-->
+                <!--        <table style="width: 100%">-->
+                <!--            <tr>-->
+                <!--                <td style="text-align: right">-->
+                <!--                    <a href="https://geni.us/iTunesMinfo">-->
+                <!--                        <img alt="App Store" height="26" width="86" src="/DesktopModules/CS.Campaign/Images/btn_AppStore.png" /></a>-->
+                <!--                </td>-->
+                <!--                <td style="text-align: left">-->
+                <!--                    <a href="https://geni.us/PlayStoreMinfo">-->
+                <!--                        <img alt="Google Play" height="26" width="86" src="/DesktopModules/CS.Campaign/Images/btn_GooglePlay.png" /></a>-->
+                <!--                </td>-->
+                <!--            </tr>-->
+                <!--        </table>-->
+                <!--    </div>-->
+
+            </div>
+        </form>
+    </center>
+</body>
+</html>
